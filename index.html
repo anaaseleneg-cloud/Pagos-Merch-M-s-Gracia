@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Pago por transferencia</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f3f1ed;
+      color: #222;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .contenedor {
+      width: 100%;
+      max-width: 440px;
+    }
+
+    .tarjeta {
+      background: white;
+      border-radius: 24px;
+      padding: 30px 24px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.10);
+      text-align: center;
+    }
+
+    .logo {
+      width: 70px;
+      height: 70px;
+      background: #e9a23b;
+      border-radius: 50%;
+      margin: 0 auto 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 30px;
+      font-weight: bold;
+    }
+
+    h1 {
+      font-size: 25px;
+      margin-bottom: 8px;
+    }
+
+    .subtitulo {
+      color: #666;
+      font-size: 15px;
+      line-height: 1.5;
+      margin-bottom: 25px;
+    }
+
+    .dato {
+      text-align: left;
+      background: #f7f7f7;
+      border-radius: 14px;
+      padding: 15px;
+      margin-bottom: 12px;
+    }
+
+    .etiqueta {
+      display: block;
+      color: #777;
+      font-size: 11px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+    }
+
+    .valor {
+      font-size: 17px;
+      font-weight: bold;
+      word-break: break-word;
+    }
+
+    .boton {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 15px;
+      margin-top: 7px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .boton:active {
+      transform: scale(0.98);
+    }
+
+    .boton-copiar {
+      background: #222;
+      color: white;
+    }
+
+    .boton-whatsapp {
+      background: #25D366;
+      color: white;
+      margin-top: 20px;
+    }
+
+    .separador {
+      height: 1px;
+      background: #e5e5e5;
+      margin: 25px 0;
+    }
+
+    .pasos {
+      text-align: left;
+      margin-top: 5px;
+    }
+
+    .pasos h2 {
+      font-size: 17px;
+      margin-bottom: 14px;
+    }
+
+    .paso {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 14px;
+      color: #555;
+      line-height: 1.4;
+    }
+
+    .numero {
+      min-width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #222;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .nota {
+      margin-top: 20px;
+      font-size: 12px;
+      color: #777;
+      line-height: 1.5;
+    }
+
+    .mensaje {
+      display: none;
+      margin-top: 9px;
+      color: #188038;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    footer {
+      margin-top: 20px;
+      font-size: 11px;
+      color: #999;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+  <div class="tarjeta">
+
+    <div class="logo">$</div>
+
+    <h1>Pago por transferencia</h1>
+
+    <p class="subtitulo">
+      Realiza tu transferencia y envíanos tu comprobante.
+    </p>
+
+
+    <!-- BANCO -->
+
+    <div class="dato">
+      <span class="etiqueta">Banco</span>
+      <span class="valor">Banorte</span>
+    </div>
+
+
+    <!-- TITULAR -->
+
+    <div class="dato">
+      <span class="etiqueta">Titular</span>
+      <span class="valor" id="titular">
+        TU NOMBRE
+      </span>
+    </div>
+
+
+    <!-- CLABE -->
+
+    <div class="dato">
+      <span class="etiqueta">CLABE</span>
+      <span class="valor" id="clabe">
+        000000000000000000
+      </span>
+    </div>
+
+    <button class="boton boton-copiar" onclick="copiarCLABE()">
+      📋 Copiar CLABE
+    </button>
+
+    <div id="mensajeCLABE" class="mensaje">
+      ✓ CLABE copiada
+    </div>
+
+
+    <!-- TARJETA -->
+
+    <div class="dato" style="margin-top:15px;">
+      <span class="etiqueta">Número de tarjeta</span>
+      <span class="valor" id="tarjeta">
+        0000 0000 0000 0000
+      </span>
+    </div>
+
+    <button class="boton boton-copiar" onclick="copiarTarjeta()">
+      📋 Copiar número de tarjeta
+    </button>
+
+    <div id="mensajeTarjeta" class="mensaje">
+      ✓ Número de tarjeta copiado
+    </div>
+
+
+    <div class="separador"></div>
+
+
+    <!-- INSTRUCCIONES -->
+
+    <div class="pasos">
+
+      <h2>¿Cómo realizar tu pago?</h2>
+
+      <div class="paso">
+        <span class="numero">1</span>
+        <span>Copia la CLABE o el número de tarjeta.</span>
+      </div>
+
+      <div class="paso">
+        <span class="numero">2</span>
+        <span>Realiza tu transferencia desde tu banco.</span>
+      </div>
+
+      <div class="paso">
+        <span class="numero">3</span>
+        <span>Guarda tu comprobante.</span>
+      </div>
+
+      <div class="paso">
+        <span class="numero">4</span>
+        <span>Envíanos el comprobante por WhatsApp.</span>
+      </div>
+
+    </div>
+
+
+    <!-- WHATSAPP -->
+
+    <button class="boton boton-whatsapp" onclick="abrirWhatsApp()">
+      💬 Enviar comprobante por WhatsApp
+    </button>
+
+    <p class="nota">
+      Después de realizar tu transferencia,
+      toca el botón de WhatsApp para enviarnos
+      tu comprobante.
+    </p>
+
+    <footer>
+      Gracias por tu pago.
+    </footer>
+
+  </div>
+
+</div>
+
+
+<script>
+
+  /*
+  ==========================================
+  DATOS DE TU CUENTA
+  ==========================================
+  */
+
+  const CLABE = "000000000000000000";
+
+  const TARJETA = "0000000000000000";
+
+  /*
+  WhatsApp:
+  Código de México + número
+  SIN +, espacios ni guiones.
+
+  Ejemplo:
+  528112345678
+  */
+
+  const WHATSAPP = "5218112345678";
+
+
+  /*
+  ==========================================
+  COPIAR CLABE
+  ==========================================
+  */
+
+  function copiarCLABE() {
+
+    navigator.clipboard.writeText(CLABE)
+      .then(function() {
+
+        mostrarMensaje("mensajeCLABE");
+
+      })
+      .catch(function() {
+
+        alert(
+          "No se pudo copiar automáticamente. " +
+          "Mantén presionada la CLABE para copiarla."
+        );
+
+      });
+
+  }
+
+
+  /*
+  ==========================================
+  COPIAR TARJETA
+  ==========================================
+  */
+
+  function copiarTarjeta() {
+
+    navigator.clipboard.writeText(TARJETA)
+      .then(function() {
+
+        mostrarMensaje("mensajeTarjeta");
+
+      })
+      .catch(function() {
+
+        alert(
+          "No se pudo copiar automáticamente. " +
+          "Mantén presionado el número para copiarlo."
+        );
+
+      });
+
+  }
+
+
+  /*
+  ==========================================
+  MENSAJE DE COPIADO
+  ==========================================
+  */
+
+  function mostrarMensaje(id) {
+
+    const mensaje = document.getElementById(id);
+
+    mensaje.style.display = "block";
+
+    setTimeout(function() {
+
+      mensaje.style.display = "none";
+
+    }, 2500);
+
+  }
+
+
+  /*
+  ==========================================
+  ABRIR WHATSAPP
+  ==========================================
+  */
+
+  function abrirWhatsApp() {
+
+    const mensaje =
+      "Hola, acabo de realizar una transferencia. " +
+      "Te envío mi comprobante. 😊";
+
+    const url =
+      "https://wa.me/" +
+      WHATSAPP +
+      "?text=" +
+      encodeURIComponent(mensaje);
+
+    window.open(url, "_blank");
+
+  }
+
+</script>
+
+</body>
+</html>
